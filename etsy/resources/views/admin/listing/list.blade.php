@@ -123,8 +123,8 @@
                   <td>{{ $lt->quantity }}</td>
                   <td>{{ $lt->price }}</td>
                   <td>
-                  	<a onclick="return confirmDelete('Are you sure?')" href="" class="btn btn-success btn-xs">Update</a>
-                  	<a onclick="return confirmDelete('Are you sure?')" href="" class="btn btn-danger btn-xs">Delete</a>
+                  	<!-- <a onclick="return confirmDelete('Are you sure?')" href="" class="btn btn-success btn-xs">Update</a>
+                  	<a onclick="return confirmDelete('Are you sure?')" href="" class="btn btn-danger btn-xs">Delete</a> -->
                     <a target="_blank" href="{{ $lt->url }}" class="btn btn-primary btn-xs">Link</a>
                   </td>
                 </tr>

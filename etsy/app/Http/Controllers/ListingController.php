@@ -10,6 +10,7 @@ use GuzzleHttp\Exception\ClientException;
 use App\Listing;
 use App\Cate;
 use App\Sale;
+use App\ListingImage;
 use Image;
 
 class ListingController extends Controller
@@ -33,15 +34,13 @@ class ListingController extends Controller
     	if(isset($request->sl_category_name)):
     		$cate_name = $request->sl_category_name;
     		$cate_page = isset($request->page) ? $request->page : 1;
-            $query = 'listings/active?category='.$cate_name.'&page='.$cate_page.'&limit=100&';
-            //echo $query;
+            $query = 'listings/active?category='.$cate_name.'&page='.$cate_page.'&limit=50&';
             $client = new Client();
             try {
                 $res = $client->request('GET', $this->url.$query.$this->api, ['allow_redirects' => false]);
                 $datas = json_decode($res->getBody(), false);
                 foreach($datas->results as $data) {
                     $this->syncListing($data);
-                    //echo $data->listing_id;
                 }
                 return redirect()->route('getListingList')->with(['flash'=>'success', 'messages'=>'Add new '.$this->i.' listings successful & '.$this->j.' listings updated!']);
             } catch(ClientException $e) {
@@ -74,6 +73,7 @@ class ListingController extends Controller
     	$listing->save();
     	$this->updateSale($data);
     	return $listing;
+    	echo 'update';
     }
 
     function createListing($data) {
@@ -152,6 +152,7 @@ class ListingController extends Controller
 		$listing->should_auto_renew     = $data->should_auto_renew;
 		$listing->save();
 		$this->createSale($data);
+		$this->getImage($data);
 		return $listing;
     }
 
@@ -183,17 +184,26 @@ class ListingController extends Controller
     	}
     }
 
-    function getImage() {
-  //   	$path = 'https://i.etsystatic.com/11153948/r/il/12af9e/1679631444/il_fullxfull.1679631444_s6o6.jpg';
-		// $filename = basename($path);
-		// Image::make($path)->save(public_path('resources/upload/listing/' . $filename));
-
-		$url_image = "https://i.etsystatic.com/11153948/r/il/12af9e/1679631444/il_fullxfull.1679631444_s6o6.jpg";
-
-		$dir = "http://localhost/etsy/resources/upload/listing/"; /*khai báo thư mục cần lưu*/
-
-		$img_info=file_get_contents($url_image);
-
-		file_put_contents($dir.substr($url_image, strrpos($url_image,'/')), $img_info); /* Dòng này là lưu ảnh vào thư mục*/
+    function getImage($data) {
+		$query     = 'listings/'.$data->listing_id.'/images?';
+		$url_image = '';
+		$client    = new Client();
+        try {
+			$res       = $client->request('GET', $this->url.$query.$this->api, ['allow_redirects' => false]);
+			$datas     = json_decode($res->getBody(), false);
+			$url_image = $datas->results[0]->url_570xN;
+			$dir       = "../storage/upload/listing";
+			$img_info  = file_get_contents($url_image);
+			$img_name  = substr($url_image, strrpos($url_image,''));
+			file_put_contents($dir.substr($url_image, strrpos($url_image,'/')), $img_info);
+			$li             = new ListingImage;
+			$li->id         = $datas->results[0]->listing_image_id;
+			$li->listing_id = $data->listing_id;
+			$li->name       = $img_name;
+			$li->save();
+			return $li;
+        } catch(ClientException $e) {
+            return '';
+        }
     }
 }
