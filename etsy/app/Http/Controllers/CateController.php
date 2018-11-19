@@ -51,9 +51,8 @@ class CateController extends Controller
                 $j     = 0;
                 foreach($datas->results as $data) {
                     $this->syncCate($data);
-                    //echo $data->category_id.'-';
                 }
-                // return redirect()->route('getCateList')->with(['flash'=>'success', 'messages'=>'Add new '.$this->i.' categories successful & '.$this->j.' categories exists!']);
+                return redirect()->route('getCateList')->with(['flash'=>'success', 'messages'=>'Add new '.$this->i.' categories successful & '.$this->j.' categories exists!']);
             } catch(ClientException $e) {
                 return redirect()->route('getCateList')->with(['flash'=>'danger', 'messages'=>'This catetegory haven\'t category child!']);
             }
@@ -131,32 +130,28 @@ class CateController extends Controller
     }
 
     public function updateCate($data) {
-        $cate = Cate::where('id', $data->category_id)->get();
-        // $cate->meta_title       = $data->meta_title;
-        // $cate->meta_keywords    = $data->meta_keywords;
-        // $cate->meta_description = $data->meta_description;
-        // $cate->page_description = $data->page_description;
-        // $cate->page_title       = $data->page_title;
-        // $cate->category_name    = $data->category_name;
-        // $cate->short_name       = $data->short_name;
-        // $cate->long_name        = $data->long_name;
-        // $cate->num_children     = $data->num_children;
-        // $cate->save();
+        $cate = Cate::where('id', $data->category_id)->first();
+        $cate->meta_title       = $data->meta_title;
+        $cate->meta_keywords    = $data->meta_keywords;
+        $cate->meta_description = $data->meta_description;
+        $cate->page_description = $data->page_description;
+        $cate->page_title       = $data->page_title;
+        $cate->category_name    = $data->category_name;
+        $cate->short_name       = $data->short_name;
+        $cate->long_name        = $data->long_name;
+        $cate->num_children     = $data->num_children;
+        $cate->save();
         return $cate;
-        //echo $cate['name'];
     }
 
     public function syncCate($data) {
         $found = Cate::where('id', $data->category_id)->first();
-        // if($found <> '[]') {
-        //     $this->j++;
-        //     return $this->updateCate($data);
-        // } else {
-        //     $this->i++;
-        //     return $this->createTopCate($data);
-        // }
-
-        echo $found->id;
-
+        if($found) {
+            $this->j++;
+            return $this->updateCate($data);
+        } else {
+            $this->i++;
+            return $this->createTopCate($data);
+        }
     }
 }

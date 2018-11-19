@@ -53,7 +53,7 @@ class ListingController extends Controller
     }
 
     function updateListing($data) {
-    	$listing = Listing::where('id', $data->listing_id)->get();
+    	$listing = Listing::where('id', $data->listing_id)->first();
     	if(property_exists($data, 'price')){
 		$listing->price 		= $data->price;
 		}else{
@@ -156,7 +156,7 @@ class ListingController extends Controller
     }
 
     function updateSale($data) {
-    	$listing = Listing::where('id', $data->listing_id)->get();
+    	$listing = Listing::where('id', $data->listing_id)->first();
     	$sale = new Sale;
     	$sale->listing_id = $data->listing_id;
 		$sale->number_sale = $listing->quantity - $data->quantity;
@@ -173,8 +173,8 @@ class ListingController extends Controller
     }
 
     function syncListing($data) {
-    	$found = Listing::where('id', $data->listing_id)->get();
-    	if(!empty($found)) {
+    	$found = Listing::where('id', $data->listing_id)->first();
+    	if($found) {
     		$this->j++;
     		return $this->updateListing($data);
     	} else {
