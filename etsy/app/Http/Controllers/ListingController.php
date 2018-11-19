@@ -7,11 +7,11 @@ use GuzzleHttp\Client;
 use GuzzleHttp\Psr7;
 use GuzzleHttp\Exception\RequestException;
 use GuzzleHttp\Exception\ClientException;
+use Freshbitsweb\Laratables\Laratables;
 use App\Listing;
 use App\Cate;
 use App\Sale;
 use App\ListingImage;
-use Image;
 
 class ListingController extends Controller
 {
@@ -21,8 +21,8 @@ class ListingController extends Controller
     protected $j = 0;
 
     function getList() {
-    	$listings = Listing::all();
-    	return view('admin.listing.list', compact('listings'));
+    	// $listings = Listing::all();
+    	return view('admin.listing.list');
     }
 
     function getListing() {
@@ -205,5 +205,9 @@ class ListingController extends Controller
         } catch(ClientException $e) {
             return '';
         }
+    }
+
+    function getLaraTables() {
+    	return Laratables::recordsOf(Listing::class);
     }
 }

@@ -64,9 +64,12 @@ Route::group(['prefix'=>'admin'], function() {
 			'as'   => 'postListing',
 			'uses' => 'ListingController@postListing'
 		]);
-		Route::get('get-image', [
-			'as'   => 'getImage',
-			'uses' => 'ListingController@getImage'
+		Route::get('laratables', [
+			'as'   => 'laratables',
+			'uses' => 'ListingController@getLaraTables'
 		]);
+		Route::get('tableview', function(){
+			return view('admin.listing.demo');
+		});
 	});
 });

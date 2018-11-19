@@ -38,12 +38,12 @@
     </div>
 
     <div class="clearfix"></div>
-  	@if(session('flash')=='success')
-  	<div class="alert alert-{{ session('flash') }} alert-dismissible fade in" role="alert">
-  		<button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">×</span>
-  		</button>
-  		<strong>Congratulation!</strong> {{ session('messages') }}.
-  	</div>
+    @if(session('flash')=='success')
+    <div class="alert alert-{{ session('flash') }} alert-dismissible fade in" role="alert">
+      <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">×</span>
+      </button>
+      <strong>Congratulation!</strong> {{ session('messages') }}.
+    </div>
     @elseif(session('flash')=='danger')
     <div class="alert alert-{{ session('flash') }} alert-dismissible fade in" role="alert">
       <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">×</span>
@@ -56,9 +56,9 @@
       </button>
       <strong>Sorry!</strong> {{ session('messages') }}.
     </div>
-  	@endif
+    @endif
 
-	<div class="clearfix"></div>
+  <div class="clearfix"></div>
 
     <div class="row">
       <div class="col-md-12 col-sm-12 col-xs-12">
@@ -86,16 +86,11 @@
             <p class="text-muted font-13 m-b-30">
               This table show all categories have in Database.
             </p>
-            <table id="lavatables" class="table table-striped table-bordered">
+            <table id="datatable-todo" class="table table-striped table-bordered">
               <thead>
                 <tr>
-                  <!-- <th>No#</th> -->
                   <th>ID</th>
                   <th>Name</th>
-                  <!-- <th>Category Name</th> -->
-                  <th>Quanlity</th>
-                  <th>Price</th>
-                  <!-- <th>Action</th> -->
                 </tr>
               </thead>
             </table>
@@ -136,17 +131,15 @@
 <script src="template/vendors/pdfmake/build/pdfmake.min.js"></script>
 <script src="template/vendors/pdfmake/build/vfs_fonts.js"></script>
 <script type="text/javascript" charset="utf-8">
-  $('#lavatables').DataTable({
+  $('#datatable-todo').DataTable({
     serverSide: true,
     processing: true,
     responsive: true,
-    ajax: "{{ route('laratables') }}",
+    ajax: "{{ route('laraveltable') }}",
     columns: [
         { name: 'id' },
-        { name: 'title' },
-        { name: 'quantity' },
-        { name: 'price' }
+        { name: 'title' }
     ],
-  });
+});
 </script>
 @endsection
